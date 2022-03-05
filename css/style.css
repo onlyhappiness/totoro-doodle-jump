@@ -1,8 +1,14 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
 .grid {
   /* width: 400px;
   height: 600px; */
   /* background-image: url('background.png'); */
-  width: 500px;
+  width: 600px;
   height: 100vh;
   background-color: yellow;
 
@@ -12,8 +18,8 @@
 }
 
 .doodler {
-  width: 87px;
-  height: 85px;
+  width: 60px;
+  height: 100px;
   /* background-image: url('doodler-guy.png'); */
   background-color: red;
   position: absolute;

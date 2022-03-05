@@ -2,21 +2,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid');
   const doodler = document.createElement('div');
 
-  console.log('그리드', grid);
-
   let doodlerLeftSpace = 50;
   let doodlerBottomSpace = 150;
 
   let isGameOver = false;
 
   // 한 화면에 platform 개수
-  let platformCount = 8;
+  let platformCount = 9;
   let platforms = [];
+
+  let upTimerId;
+  let downTimerId;
 
   // game background
   function createDoodler() {
     grid.appendChild(doodler);
     doodler.classList.add('doodler');
+    doodlerLeftSpace = platforms[0].left;
     doodler.style.left = doodlerLeftSpace + 'px';
     doodler.style.bottom = doodlerBottomSpace + 'px';
   }
@@ -25,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     constructor(newPlatBottom) {
       this.bottom = newPlatBottom;
       // platform 양 옆 폭
-      this.left = Math.random() * 315;
+      this.left = Math.random() * 400;
       this.visual = document.createElement('div');
 
       const visual = this.visual;
@@ -48,10 +50,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // 위로 점점 올라감
+  function movePlatforms() {
+    if (doodlerBottomSpace > 200) {
+      platforms.forEach((platform) => {
+        platform.bottom -= 4;
+
+        let visual = platform.visual;
+        visual.style.bottom = platform.bottom + 'px';
+      });
+    }
+  }
+
+  function jump() {
+    clearInterval(downTimerId);
+    upTimerId = setInterval(function () {
+      doodlerBottomSpace += 20;
+      doodler.style.bottom = doodlerBottomSpace + 'px';
+      if (doodlerBottomSpace > 350) {
+        fall();
+      }
+    }, 30);
+  }
+
+  function fall() {
+    clearInterval(upTimerId);
+    downTimerId = setInterval(function () {
+      doodlerBottomSpace -= 5;
+      doodler.style.bottom = doodlerBottomSpace + 'px';
+      if (doodlerBottomSpace <= 0) {
+        gameOver();
+      }
+    }, 30);
+  }
+
+  function gameOver() {
+    console.log('game over');
+    isGameOver = true;
+    clearInterval(upTimerId);
+    clearInterval(downTimerId);
+  }
+
   function start() {
     if (!isGameOver) {
-      createDoodler();
       createPlatforms();
+      createDoodler();
+      setInterval(movePlatforms, 30);
+      // jump();
     }
   }
 
